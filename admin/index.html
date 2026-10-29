@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MakhzounTech - Super-Admin Panel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased">
+
+  <header class="bg-slate-900 border-b border-slate-800 px-6 py-4 flex items-center justify-between sticky top-0 z-40">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-black text-xl shadow-lg shadow-amber-500/20">M</div>
+      <div>
+        <h1 class="font-bold text-lg text-white">MakhzounTech Super-Admin SaaS Portal</h1>
+        <p class="text-xs text-amber-400 font-mono">Platform Owner Engine & Tenants ON/OFF Switches</p>
+      </div>
+    </div>
+    <a href="/public/index.html" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-4 py-2 rounded-xl border border-slate-700">
+      العودة للمتجر الرئيسي
+    </a>
+  </header>
+
+  <main class="flex-1 p-6 space-y-6">
+    <div class="flex items-center justify-between bg-slate-900/60 border border-slate-800 p-5 rounded-2xl">
+      <div>
+        <h2 class="font-bold text-lg text-white">إدارة اشتراكات المحلات والعملاء (Tenants Management)</h2>
+        <p class="text-xs text-slate-400">التحكم في تفعيل وتعطيل اشتراكات المحلات بضغطة زر واحدة</p>
+      </div>
+      <button onclick="openModal('add-tenant')" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2">
+        <i data-lucide="store" class="w-4 h-4"></i> ترخيص محل جديد (New Tenant)
+      </button>
+    </div>
+
+    <!-- Tenants Table -->
+    <div class="bg-slate-900/70 border border-slate-800 rounded-2xl overflow-hidden shadow-2xl">
+      <table class="w-full text-right text-xs">
+        <thead class="text-slate-400 bg-slate-950/80 border-b border-slate-800">
+          <tr>
+            <th class="p-4">كود المتجر</th>
+            <th class="p-4">اسم المحل / تجاري</th>
+            <th class="p-4">المدينة</th>
+            <th class="p-4">الهاتف</th>
+            <th class="p-4">نوع الخطة</th>
+            <th class="p-4">حالة الاشتراك</th>
+            <th class="p-4 text-center">مفتاح التشغيل / التعطيل (ON/OFF)</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-800/60 text-slate-300" id="admin-tenants-tbody">
+          <tr>
+            <td class="p-4 font-mono text-teal-400 font-bold">ORAN-STORE-01</td>
+            <td class="p-4 font-bold text-white">محل وهران المركزي</td>
+            <td class="p-4">وهران</td>
+            <td class="p-4 font-mono">041 00 11 22</td>
+            <td class="p-4"><span class="bg-teal-500/10 text-teal-400 px-2.5 py-1 rounded-full border border-teal-500/20 font-bold">PRO_SAAS</span></td>
+            <td class="p-4"><span class="bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-500/20 font-bold">نشط (ACTIVE)</span></td>
+            <td class="p-4 text-center">
+              <button onclick="toggleTenantStatus('tenant_oran_01', 'SUSPENDED')" class="bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-rose-500/30 px-3 py-1.5 rounded-xl font-bold">
+                تعطيل الحساب (OFF)
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td class="p-4 font-mono text-teal-400 font-bold">ALG-STORE-02</td>
+            <td class="p-4 font-bold text-white">سوبرماركت القصبة</td>
+            <td class="p-4">الجزائر العاصمة</td>
+            <td class="p-4 font-mono">021 55 44 33</td>
+            <td class="p-4"><span class="bg-slate-800 text-slate-300 px-2.5 py-1 rounded-full border border-slate-700 font-bold">STARTER</span></td>
+            <td class="p-4"><span class="bg-emerald-500/10 text-emerald-400 px-2.5 py-1 rounded-full border border-emerald-500/20 font-bold">نشط (ACTIVE)</span></td>
+            <td class="p-4 text-center">
+              <button onclick="toggleTenantStatus('tenant_algiers_02', 'SUSPENDED')" class="bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-rose-500/30 px-3 py-1.5 rounded-xl font-bold">
+                تعطيل الحساب (OFF)
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/app.js"></script>
+  <script>
+    async function toggleTenantStatus(tenantId, newStatus) {
+      const res = await window.MakhzounAPI.updateTenantStatus(tenantId, newStatus);
+      if (res.success || res.offline) {
+        alert(`تم تغيير حالة المحل بنجاح إلى: ${newStatus}`);
+        window.location.reload();
+      }
+    }
+  </script>
+</body>
+</html>

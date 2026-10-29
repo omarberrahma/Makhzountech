@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MakhzounTech - Caisse Tactile / POS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col antialiased">
+
+  <!-- POS Header Bar -->
+  <header class="bg-slate-950 border-b border-slate-800 px-6 py-3 flex items-center justify-between sticky top-0 z-40">
+    <div class="flex items-center gap-3">
+      <a href="/public/index.html" class="w-9 h-9 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center text-slate-300 hover:text-white">
+        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+      </a>
+      <div>
+        <h1 class="font-bold text-base text-white">نقطة البيع السريع (Caisse Tactile / POS)</h1>
+        <p class="text-xs text-teal-400 font-medium">محل وهران المركزي - الوردية الأولى</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <span class="text-xs bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 px-3 py-1 rounded-full flex items-center gap-1.5 font-semibold">
+        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> الصندوق مفتوح
+      </span>
+      <button onclick="clearPOSCart()" class="text-xs bg-slate-900 hover:bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-lg text-slate-300">
+        تفريغ السلة
+      </button>
+    </div>
+  </header>
+
+  <!-- POS Main Work Grid -->
+  <main class="flex-1 p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <!-- Left / Center: Barcode & Touch Products Grid -->
+    <div class="lg:col-span-2 space-y-4">
+      <div class="bg-slate-950/70 border border-slate-800 p-3 rounded-2xl flex gap-3">
+        <div class="relative flex-1">
+          <i data-lucide="barcode" class="w-5 h-5 text-slate-400 absolute right-3 top-3"></i>
+          <input type="text" id="pos-barcode-input" placeholder="امسح الباركود بالماسح أو ابحث باسم السلعة..." class="w-full bg-slate-900 border border-slate-700 rounded-xl pr-10 pl-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:border-teal-500" />
+        </div>
+        <select class="bg-slate-900 border border-slate-700 text-slate-300 text-xs rounded-xl px-4 py-2.5">
+          <option>جميع الفئات</option>
+          <option>مواد غذائية</option>
+          <option>مستلزمات عامة</option>
+        </select>
+      </div>
+
+      <!-- Touch Product Cards Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 gap-3.5" id="pos-items-grid">
+        <div onclick="addToPOSCart('حليب كانديا 1 لتر', 135, '61300012345')" class="bg-slate-950/60 border border-slate-800 hover:border-teal-500/60 p-4 rounded-2xl cursor-pointer transition select-none flex flex-col justify-between group">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded-full">مخزون: 48</span>
+              <span class="text-xs text-slate-500 font-mono">61300012345</span>
+            </div>
+            <h4 class="font-bold text-sm text-slate-100 group-hover:text-teal-400 transition">حليب كانديا 1 لتر</h4>
+          </div>
+          <div class="mt-4 flex items-center justify-between">
+            <span class="font-extrabold text-teal-400 text-base">135 دج</span>
+            <span class="w-8 h-8 rounded-xl bg-slate-800 text-slate-200 group-hover:bg-teal-500 group-hover:text-slate-950 flex items-center justify-center font-bold text-sm transition">+</span>
+          </div>
+        </div>
+
+        <div onclick="addToPOSCart('زيت عافية 5 لتر', 650, '61300067890')" class="bg-slate-950/60 border border-slate-800 hover:border-teal-500/60 p-4 rounded-2xl cursor-pointer transition select-none flex flex-col justify-between group">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] text-teal-400 bg-teal-500/10 px-2 py-0.5 rounded-full">مخزون: 12</span>
+              <span class="text-xs text-slate-500 font-mono">61300067890</span>
+            </div>
+            <h4 class="font-bold text-sm text-slate-100 group-hover:text-teal-400 transition">زيت عافية 5 لتر</h4>
+          </div>
+          <div class="mt-4 flex items-center justify-between">
+            <span class="font-extrabold text-teal-400 text-base">650 دج</span>
+            <span class="w-8 h-8 rounded-xl bg-slate-800 text-slate-200 group-hover:bg-teal-500 group-hover:text-slate-950 flex items-center justify-center font-bold text-sm transition">+</span>
+          </div>
+        </div>
+
+        <div onclick="addToPOSCart('قهوة فاميكو 250غ', 270, '61300099881')" class="bg-slate-950/60 border border-slate-800 hover:border-teal-500/60 p-4 rounded-2xl cursor-pointer transition select-none flex flex-col justify-between group">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[10px] text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded-full">مخزون: 3 (حرج)</span>
+              <span class="text-xs text-slate-500 font-mono">61300099881</span>
+            </div>
+            <h4 class="font-bold text-sm text-slate-100 group-hover:text-teal-400 transition">قهوة فاميكو 250غ</h4>
+          </div>
+          <div class="mt-4 flex items-center justify-between">
+            <span class="font-extrabold text-teal-400 text-base">270 دج</span>
+            <span class="w-8 h-8 rounded-xl bg-slate-800 text-slate-200 group-hover:bg-teal-500 group-hover:text-slate-950 flex items-center justify-center font-bold text-sm transition">+</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right: POS Ticket & Checkout Panel -->
+    <div class="bg-slate-950 border border-slate-800 rounded-2xl p-5 flex flex-col justify-between shadow-2xl">
+      <div>
+        <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+          <h3 class="font-bold text-white flex items-center gap-2">
+            <i data-lucide="receipt-text" class="w-4 h-4 text-teal-400"></i>
+            تذكرة البيع (Ticket de Caisse)
+          </h3>
+          <button onclick="clearPOSCart()" class="text-xs text-rose-400 hover:underline">مسح الكل</button>
+        </div>
+
+        <!-- Customer Debt Picker -->
+        <div class="mt-4">
+          <label class="block text-[11px] text-slate-400 mb-1">الزبون / الحساب المفوض:</label>
+          <select id="pos-client-select" class="w-full bg-slate-900 border border-slate-800 text-slate-200 text-xs rounded-xl p-2.5">
+            <option value="">زبون عابر (Comptoir / Client Passager)</option>
+            <option value="contact_001">مكتبة الوفاء (دين سابق: 34,000 دج)</option>
+            <option value="contact_002">سوبرماركت البركة (دين سابق: 111,000 دج)</option>
+          </select>
+        </div>
+
+        <!-- Dynamic Cart List -->
+        <div id="cart-list" class="mt-4 space-y-2 max-h-72 overflow-y-auto pr-1">
+          <p class="text-xs text-slate-500 text-center py-8">السلة فارغة، انقر على السلع لإضافتها.</p>
+        </div>
+      </div>
+
+      <!-- Checkout Totals & Printer Trigger -->
+      <div class="pt-4 border-t border-slate-800 mt-4 space-y-3">
+        <div class="flex items-center justify-between text-sm">
+          <span class="text-slate-400">المجموع الصافي:</span>
+          <span id="pos-total" class="font-extrabold text-2xl text-teal-400">0 دج</span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 text-xs font-semibold">
+          <button onclick="handlePOSCheckout('CASH', false)" class="bg-slate-900 hover:bg-slate-800 border border-slate-700 py-3 rounded-xl flex items-center justify-center gap-1.5 text-slate-200">
+            <i data-lucide="banknote" class="w-4 h-4 text-emerald-400"></i> كاش نقداً
+          </button>
+          <button onclick="handlePOSCheckout('CREDIT', true)" class="bg-slate-900 hover:bg-slate-800 border border-slate-700 py-3 rounded-xl flex items-center justify-center gap-1.5 text-amber-400">
+            <i data-lucide="credit-card" class="w-4 h-4"></i> تسجيل على الدين (Crédit)
+          </button>
+        </div>
+
+        <button onclick="handlePOSCheckout('CASH', false)" class="w-full bg-gradient-to-r from-teal-500 to-emerald-500 hover:opacity-90 text-slate-950 font-extrabold py-3.5 rounded-xl transition flex items-center justify-center gap-2 shadow-lg shadow-teal-500/20">
+          <i data-lucide="printer" class="w-5 h-5"></i>
+          تأكيد البيع وطباعة التذكرة الحرارية
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/pos.js"></script>
+  <script src="/assets/js/app.js"></script>
+</body>
+</html>

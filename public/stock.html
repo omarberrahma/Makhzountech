@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MakhzounTech - إدارة المخزون والسلع</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="/assets/css/style.css" />
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col antialiased">
+
+  <!-- Header Bar -->
+  <header class="bg-slate-950 border-b border-slate-800 px-6 py-4 flex items-center justify-between sticky top-0 z-40">
+    <div class="flex items-center gap-3">
+      <a href="/public/index.html" class="w-9 h-9 rounded-xl bg-slate-900 border border-slate-700 flex items-center justify-center text-slate-300 hover:text-white">
+        <i data-lucide="arrow-right" class="w-5 h-5"></i>
+      </a>
+      <div>
+        <h1 class="font-bold text-lg text-white">إدارة المخزون والسلع (Articles & Stock)</h1>
+        <p class="text-xs text-slate-400">متابعة المنتجات، الباركود، وسقف التنبيهات</p>
+      </div>
+    </div>
+    <button onclick="openModal('add-product')" class="bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs flex items-center gap-2 shadow-lg shadow-teal-500/10">
+      <i data-lucide="plus-circle" class="w-4 h-4"></i> إضافة منتج جديد
+    </button>
+  </header>
+
+  <main class="flex-1 p-6 space-y-4">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-3 bg-slate-950/60 border border-slate-800 p-4 rounded-2xl">
+      <div class="flex items-center gap-2 w-full sm:w-auto">
+        <input type="text" id="stock-search-input" placeholder="بحث باسم السلعة، الباركود، أو المورد..." class="bg-slate-900 border border-slate-700 text-xs text-slate-200 rounded-xl px-4 py-2.5 w-full sm:w-80 focus:outline-none focus:border-teal-500" />
+      </div>
+    </div>
+
+    <!-- Stock Table -->
+    <div class="bg-slate-950/70 border border-slate-800 rounded-2xl overflow-hidden shadow-xl">
+      <table class="w-full text-right text-xs">
+        <thead class="text-slate-400 bg-slate-900/80 border-b border-slate-800">
+          <tr>
+            <th class="p-4">الباركود</th>
+            <th class="p-4">اسم السلعة</th>
+            <th class="p-4">سعر الشراء</th>
+            <th class="p-4">سعر البيع (TTC)</th>
+            <th class="p-4">الكمية الحالية</th>
+            <th class="p-4">المورد الرئيسي</th>
+            <th class="p-4 text-center">التحكم</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-800/60 text-slate-300" id="stock-table-body">
+          <tr>
+            <td class="p-4 font-mono text-slate-400">61300012345</td>
+            <td class="p-4 font-bold text-white">حليب كانديا 1 لتر</td>
+            <td class="p-4">110 دج</td>
+            <td class="p-4 font-semibold text-teal-400">135 دج</td>
+            <td class="p-4 font-bold text-emerald-400">48 علبة</td>
+            <td class="p-4">مجمع كانديا الجزائر</td>
+            <td class="p-4 text-center">
+              <button class="text-slate-400 hover:text-teal-400 p-1"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
+            </td>
+          </tr>
+          <tr>
+            <td class="p-4 font-mono text-slate-400">61300067890</td>
+            <td class="p-4 font-bold text-white">زيت عافية 5 لتر</td>
+            <td class="p-4">580 دج</td>
+            <td class="p-4 font-semibold text-teal-400">650 دج</td>
+            <td class="p-4 font-bold text-amber-400">12 قارورة</td>
+            <td class="p-4">مؤسسة سفينة وهران</td>
+            <td class="p-4 text-center">
+              <button class="text-slate-400 hover:text-teal-400 p-1"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Add Product Modal -->
+  <div id="modal-add-product" class="hidden fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl max-w-md w-full p-6 space-y-4">
+      <h3 class="font-bold text-lg text-white">إضافة منتج جديد للمخزون</h3>
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block text-slate-400 mb-1">اسم السلعة</label>
+          <input type="text" id="modal-art-title" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-slate-200" placeholder="مثال: عصير رامي 1 لتر" />
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">رمز الباركود</label>
+          <input type="text" id="modal-art-barcode" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-slate-200" placeholder="613000..." />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 mb-1">سعر الشراء</label>
+            <input type="number" id="modal-art-buying" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-slate-200" placeholder="100" />
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">سعر البيع</label>
+            <input type="number" id="modal-art-selling" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-slate-200" placeholder="130" />
+          </div>
+        </div>
+        <div>
+          <label class="block text-slate-400 mb-1">الكمية الأولية</label>
+          <input type="number" id="modal-art-qty" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-slate-200" placeholder="24" />
+        </div>
+      </div>
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeModal('add-product')" class="bg-slate-800 text-slate-300 font-bold px-4 py-2 rounded-xl text-xs">إلغاء</button>
+        <button onclick="saveNewProduct()" class="bg-teal-500 text-slate-950 font-bold px-5 py-2 rounded-xl text-xs">حفظ السلعة</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/assets/js/api.js"></script>
+  <script src="/assets/js/app.js"></script>
+  <script>
+    async function saveNewProduct() {
+      const title = document.getElementById('modal-art-title').value;
+      const barcode = document.getElementById('modal-art-barcode').value;
+      const buying_price = document.getElementById('modal-art-buying').value;
+      const selling_price = document.getElementById('modal-art-selling').value;
+      const quantity = document.getElementById('modal-art-qty').value;
+
+      if (!title || !selling_price) {
+        alert("يرجى ملء اسم السلعة وسعر البيع.");
+        return;
+      }
+
+      const res = await window.MakhzounAPI.addArticle({ title, barcode, buying_price, selling_price, quantity });
+      if (res.success || res.offline) {
+        alert("تم حفظ المنتوج بنجاح!");
+        closeModal('add-product');
+        window.location.reload();
+      } else {
+        alert("خطأ أثناء حفظ المنتج.");
+      }
+    }
+  </script>
+</body>
+</html>
